@@ -39,6 +39,7 @@ def train(args: argparse.Namespace) -> None:
     model.train()
     for epoch in range(args.epochs):
         running_loss = 0.0
+        samples_seen = 0
         for images, labels in dataloader:
             images = images.to(device)
             labels = labels.to(device)
@@ -49,9 +50,11 @@ def train(args: argparse.Namespace) -> None:
             loss.backward()
             optimizer.step()
 
-            running_loss += loss.item() * images.size(0)
+            batch_size = images.size(0)
+            running_loss += loss.item() * batch_size
+            samples_seen += batch_size
 
-        epoch_loss = running_loss / len(dataset)
+        epoch_loss = running_loss / max(samples_seen, 1)
         print(f"Epoch {epoch + 1}/{args.epochs} - train_loss: {epoch_loss:.4f}")
 
         # Placeholder: add validation DataLoader/evaluation here.
