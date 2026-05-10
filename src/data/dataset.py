@@ -85,7 +85,7 @@ class DeepfakeDataset(Dataset[tuple[Tensor, Tensor]]):
 
         if not samples:
             raise ValueError(
-                "No images were found. Ensure the dataset has 'real' and 'fake' subfolders with image files."
+                "No images were found. Ensure at least one of 'real/' or 'fake/' contains supported image files."
             )
 
         return samples
