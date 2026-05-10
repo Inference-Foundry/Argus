@@ -19,10 +19,11 @@ def _random_jpeg_compression(image: Image.Image, quality_range: tuple[int, int])
     min_quality, max_quality = quality_range
     quality = random.randint(min_quality, max_quality)
 
-    buffer = io.BytesIO()
-    image.convert("RGB").save(buffer, format="JPEG", quality=quality)
-    buffer.seek(0)
-    return Image.open(buffer).convert("RGB")
+    with io.BytesIO() as buffer:
+        image.convert("RGB").save(buffer, format="JPEG", quality=quality)
+        buffer.seek(0)
+        with Image.open(buffer) as compressed:
+            return compressed.convert("RGB")
 
 
 def default_image_transform(image_size: int = 224) -> transforms.Compose:

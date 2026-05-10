@@ -18,7 +18,8 @@ def evaluate_predictions(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, An
 
     # Treat predictions outside [0, 1] as logits and map them to probabilities.
     if np.any((y_pred_arr < 0) | (y_pred_arr > 1)):
-        y_prob = 1.0 / (1.0 + np.exp(-y_pred_arr))
+        clipped_logits = np.clip(y_pred_arr, -500, 500)
+        y_prob = 1.0 / (1.0 + np.exp(-clipped_logits))
     else:
         y_prob = y_pred_arr
 
