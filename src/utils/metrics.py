@@ -7,6 +7,9 @@ from typing import Any
 import numpy as np
 from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 
+_LOGIT_CLIP_MIN = -500.0
+_LOGIT_CLIP_MAX = 500.0
+
 
 def evaluate_predictions(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, Any]:
     """Return accuracy, ROC-AUC, and confusion matrix for binary predictions."""
@@ -18,7 +21,7 @@ def evaluate_predictions(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, An
 
     # Treat predictions outside [0, 1] as logits and map them to probabilities.
     if np.any((y_pred_arr < 0) | (y_pred_arr > 1)):
-        clipped_logits = np.clip(y_pred_arr, -500, 500)
+        clipped_logits = np.clip(y_pred_arr, _LOGIT_CLIP_MIN, _LOGIT_CLIP_MAX)
         y_prob = 1.0 / (1.0 + np.exp(-clipped_logits))
     else:
         y_prob = y_pred_arr

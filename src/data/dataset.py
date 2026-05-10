@@ -98,7 +98,7 @@ class DeepfakeDataset(Dataset[tuple[Tensor, Tensor]]):
         """Return transformed image tensor and binary label tensor."""
         image_path, label = self.samples[index]
         with Image.open(image_path) as image:
-            image = image.convert("RGB")
+            image = image.convert("RGB").copy()
         image_tensor = self.transform(image)
         label_tensor = torch.tensor(label, dtype=torch.float32)
         return image_tensor, label_tensor
