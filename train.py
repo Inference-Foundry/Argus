@@ -55,7 +55,10 @@ def train(args: argparse.Namespace) -> None:
             samples_seen += batch_size
 
         if samples_seen == 0:
-            raise RuntimeError("No training samples were processed. Check your dataset and DataLoader settings.")
+            raise RuntimeError(
+                "No training samples were processed. Ensure --data-dir points to a non-empty dataset with "
+                "'real/' and 'fake/' subfolders."
+            )
         epoch_loss = running_loss / samples_seen
         print(f"Epoch {epoch + 1}/{args.epochs} - train_loss: {epoch_loss:.4f}")
 

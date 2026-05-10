@@ -7,6 +7,7 @@ from typing import Any
 import numpy as np
 from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 
+# Clipping avoids overflow in exp() during sigmoid conversion from large-magnitude logits.
 _LOGIT_CLIP_MIN = -500.0
 _LOGIT_CLIP_MAX = 500.0
 
