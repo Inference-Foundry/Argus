@@ -19,6 +19,10 @@ def train(args: argparse.Namespace) -> None:
 
     # Hook in your production dataset root with --data-dir.
     dataset = DeepfakeDataset(root_dir=args.data_dir, transform=build_robust_augmentation())
+    if len(dataset) == 0:
+        raise RuntimeError(
+            "No samples found. Ensure --data-dir points to a non-empty dataset with 'real/' and 'fake/' folders."
+        )
     dataloader = DataLoader(
         dataset,
         batch_size=args.batch_size,

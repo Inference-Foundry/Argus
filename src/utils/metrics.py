@@ -17,8 +17,12 @@ def evaluate_predictions(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, An
     y_true_arr = np.asarray(y_true).astype(int).ravel()
     y_pred_arr = np.asarray(y_pred).ravel()
 
+    if y_true_arr.size == 0:
+        raise ValueError("y_true must contain at least one ground-truth label.")
     if y_pred_arr.size == 0:
         raise ValueError("y_pred must contain at least one prediction.")
+    if y_true_arr.shape[0] != y_pred_arr.shape[0]:
+        raise ValueError("y_true and y_pred must have the same number of elements.")
 
     # Treat predictions outside [0, 1] as logits and map them to probabilities.
     if np.any((y_pred_arr < 0) | (y_pred_arr > 1)):
