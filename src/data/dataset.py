@@ -23,7 +23,7 @@ def _random_jpeg_compression(image: Image.Image, quality_range: tuple[int, int])
         image.convert("RGB").save(buffer, format="JPEG", quality=quality)
         buffer.seek(0)
         with Image.open(buffer) as compressed:
-            return compressed.convert("RGB")
+            return compressed.convert("RGB").copy()
 
 
 def default_image_transform(image_size: int = 224) -> transforms.Compose:
@@ -97,7 +97,8 @@ class DeepfakeDataset(Dataset[tuple[Tensor, Tensor]]):
     def __getitem__(self, index: int) -> tuple[Tensor, Tensor]:
         """Return transformed image tensor and binary label tensor."""
         image_path, label = self.samples[index]
-        image = Image.open(image_path).convert("RGB")
+        with Image.open(image_path) as image:
+            image = image.convert("RGB")
         image_tensor = self.transform(image)
         label_tensor = torch.tensor(label, dtype=torch.float32)
         return image_tensor, label_tensor
