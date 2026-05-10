@@ -54,7 +54,9 @@ def train(args: argparse.Namespace) -> None:
             running_loss += loss.item() * batch_size
             samples_seen += batch_size
 
-        epoch_loss = running_loss / max(samples_seen, 1)
+        if samples_seen == 0:
+            raise RuntimeError("No training samples were processed. Check your dataset and DataLoader settings.")
+        epoch_loss = running_loss / samples_seen
         print(f"Epoch {epoch + 1}/{args.epochs} - train_loss: {epoch_loss:.4f}")
 
         # Placeholder: add validation DataLoader/evaluation here.
